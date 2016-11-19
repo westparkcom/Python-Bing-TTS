@@ -12,18 +12,18 @@ try:
     import simplejson as json
 except ImportError:
     import json
-import requests
 import logging
+import httplib
 
 
 class BadRequestException(Exception):
     def __init__(self, message):
-        self.message = message.text
+        self.message = str(message.status) + " " + str(message.reason)
         super(BadRequestException, self).__init__(self.message)
         
 class AuthException(Exception):
     def __init__(self, message):
-        self.message = message.text
+        self.message = str(message.status) + " " + str(message.reason)
         super(AuthException, self).__init__(self.message)
 
 
@@ -31,9 +31,10 @@ class Translator(object):
     """
     Implements API for the Microsoft Translator service
     """
-    auth_url = 'https://api.cognitive.microsoft.com/sts/v1.0/issueToken'
-    base_url = 'https://speech.platform.bing.com'
-    
+    auth_host = 'api.cognitive.microsoft.com'
+    auth_path = '/sts/v1.0/issueToken'
+    base_host = 'speech.platform.bing.com'
+    base_path = ''
     def __init__(self, client_secret, debug=False):
         """
         :param clien_secret: The API key provided by Azure
@@ -52,13 +53,13 @@ class Translator(object):
         
         :return: Text of the access token to be used with requests
         """
-        response = requests.post(
-            self.auth_url,
-            headers={'Ocp-Apim-Subscription-Key' : self.client_secret})
-            
-        if response.status_code != 200:
+        headers={'Ocp-Apim-Subscription-Key' : self.client_secret}
+        conn = httplib.HTTPSConnection(self.auth_host)
+        conn.request(method="POST", url=self.auth_path, headers=headers, body="")
+        response = conn.getresponse()    
+        if int(response.status) != 200:
             raise AuthException(response)
-        return response.text
+        return response.read()
         
     def call(self, headerfields, path, body):
         """
@@ -76,21 +77,20 @@ class Translator(object):
         # Set authorization header to token we just retrieved
         headerfields["Authorization"] = "Bearer " + self.access_token
         # Post to Bing API
-        resp = requests.post(
-            "/".join([self.base_url, path]),
-            headers = headerfields,
-            data = body
-        )
+        urlpath = "/".join([self.base_path, path])
+        conn = httplib.HTTPSConnection(self.base_host)
+        conn.request(method="POST", url=urlpath, headers=headerfields, body=body)
+        resp = conn.getresponse()
         # If token was expired, get a new one and try again
-        if resp.status_code == 401:
+        if int(resp.status) == 401:
             self.access_token = None
             return self.call(headerfields, path, body)
         
         # Bad data or problem, raise exception    
-        if resp.status_code != 200:
+        if int(resp.status) != 200:
             raise BadRequestException(resp)
             
-        return resp.content
+        return resp.read()
         
     def speak(self, text, lang, gender, format):
         """
