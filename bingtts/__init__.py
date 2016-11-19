@@ -25,6 +25,11 @@ class AuthException(Exception):
     def __init__(self, message):
         self.message = str(message.status) + " " + str(message.reason)
         super(AuthException, self).__init__(self.message)
+        
+class LanguageException(Exception):
+    def __init__(self, message):
+        self.message = str(message)
+        super(LanguageException, self).__init__(self.message)
 
 
 class Translator(object):
@@ -143,8 +148,8 @@ class Translator(object):
             format = 'riff-8khz-8bit-mono-mulaw'
         try:
             servicename = namemap[lang + ',' + gender]
-        except (Exception) as e:
-            raise BadRequestException(e)
+        except (Exception):
+            raise LanguageException("Invalid language/gender combination: %s, %s" % (lang, gender))
             
         headers = {
             "Content-type" : "application/ssml+xml",
