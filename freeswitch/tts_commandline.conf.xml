@@ -1,0 +1,15 @@
+<configuration name="tts_commandline.conf" description="TextToSpeech Commandline configuration">
+    <settings>
+	<!--
+	Some variables will be replaced :
+	${text}: input text (quoted)
+	${rate}: sample rate (example: 8000)
+	${voice}: voice_name passed to TTS(quoted)
+	${file}: output file (quoted, including .wav extension)
+    
+    Example commands can be found at:
+    http://wiki.freeswitch.org/wiki/Mod_tts_commandline#Example_commands
+	-->
+	<param name="command" value="/usr/bin/python /usr/local/bin/bingtts.py --cache=/usr/share/freeswitch/sounds/temp/8000 --dest=${file} --lang=${voice} --fileformat=riff-8khz-8bit-mono-mulaw --apikey=YOURAPIKEY --text=${text}"/>
+    </settings>
+</configuration>
