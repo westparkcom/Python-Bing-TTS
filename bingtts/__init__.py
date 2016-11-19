@@ -90,7 +90,7 @@ class Translator(object):
         if resp.status_code != 200:
             raise BadRequestException(resp)
             
-        return resp.text
+        return resp.content
         
     def speak(self, text, lang, gender, format):
         """
