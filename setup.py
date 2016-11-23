@@ -4,7 +4,6 @@ setup(
     name='bingtts',
     packages=['bingtts'],
     install_requires=[
-        'json',
         'httplib'
     ],
     version='0.1.0',
