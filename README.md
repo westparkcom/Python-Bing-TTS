@@ -1,6 +1,11 @@
 # Python-Bing-TTS
 Microsoft Bing Text to Speech library for Python
 
+# Installation
+To install using pip, run the following command:
+
+    pip install git+https://github.com/westparkcom/Python-Bing-TTS.git
+
 # Usage
 The following is the usage of the library
 
