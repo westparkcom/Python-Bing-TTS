@@ -13,7 +13,7 @@ try:
 except ImportError:
     import json
 import logging
-import httplib
+import http.client
 
 
 class BadRequestException(Exception):
@@ -59,7 +59,7 @@ class Translator(object):
         :return: Text of the access token to be used with requests
         """
         headers={'Ocp-Apim-Subscription-Key' : self.client_secret}
-        conn = httplib.HTTPSConnection(self.auth_host)
+        conn = http.client.HTTPSConnection(self.auth_host)
         conn.request(method="POST", url=self.auth_path, headers=headers, body="")
         response = conn.getresponse()    
         if int(response.status) != 200:
@@ -80,10 +80,10 @@ class Translator(object):
             self.access_token = self.get_access_token()
         
         # Set authorization header to token we just retrieved
-        headerfields["Authorization"] = "Bearer " + self.access_token
+        headerfields["Authorization"] = "Bearer " + self.access_token.decode('utf-8')
         # Post to Bing API
         urlpath = "/".join([self.base_path, path])
-        conn = httplib.HTTPSConnection(self.base_host)
+        conn = http.client.HTTPSConnection(self.base_host)
         conn.request(method="POST", url=urlpath, headers=headerfields, body=body)
         resp = conn.getresponse()
         # If token was expired, get a new one and try again
