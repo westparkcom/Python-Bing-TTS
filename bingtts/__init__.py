@@ -13,7 +13,11 @@ try:
 except ImportError:
     import json
 import logging
-import httplib
+
+try:
+    import httplib
+except ImportError:
+    import http.client as httplib
 
 
 class BadRequestException(Exception):
@@ -80,7 +84,10 @@ class Translator(object):
             self.access_token = self.get_access_token()
         
         # Set authorization header to token we just retrieved
-        headerfields["Authorization"] = "Bearer " + self.access_token
+        try:
+            headerfields["Authorization"] = "Bearer " + self.access_token
+        except:
+            headerfields["Authorization"] = "Bearer " + self.access_token.decode('utf-8')
         # Post to Bing API
         urlpath = "/".join([self.base_path, path])
         conn = httplib.HTTPSConnection(self.base_host)
