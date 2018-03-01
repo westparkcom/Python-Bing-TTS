@@ -24,6 +24,7 @@ namemap = {
     "fr-CA,Female" : "Microsoft Server Speech Text to Speech Voice (fr-CA, Caroline)",
     "fr-FR,Female" : "Microsoft Server Speech Text to Speech Voice (fr-FR, Julie, Apollo)",
     "fr-FR,Male" : "Microsoft Server Speech Text to Speech Voice (fr-FR, Paul, Apollo)",
+    "he-IL,Male" : "Microsoft Server Speech Text to Speech Voice (he-IL, Asaf)",
     "it-IT,Male" : "Microsoft Server Speech Text to Speech Voice (it-IT, Cosimo, Apollo)",
     "ja-JP,Female" : "Microsoft Server Speech Text to Speech Voice (ja-JP, Ayumi, Apollo)",
     "ja-JP,Male" : "Microsoft Server Speech Text to Speech Voice (ja-JP, Ichiro, Apollo)",
