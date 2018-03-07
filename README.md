@@ -14,9 +14,9 @@ The following is the usage of the library
 Variable | Description | Note
 --- | --- | ---
 text | The text that you wish to convert to speech | 
-language | The language/country you wish to hear the speech in | Case sensitive. See [Bing TTS API Refernce](https://www.microsoft.com/cognitive-services/en-us/speech-api/documentation/api-reference-rest/bingvoiceoutput#4-supported-locales-and-voice-fonts) for list
+language | The language/country you wish to hear the speech in | Case sensitive. See [Bing TTS API Reference](https://docs.microsoft.com/en-us/azure/cognitive-services/speech/api-reference-rest/bingvoiceoutput#SupLocales) for list
 gender | Male or Female | Case sensitive
-fileformat | File format to encode the speech to | See [Bing TTS API Reference](https://www.microsoft.com/cognitive-services/en-us/speech-api/documentation/api-reference-rest/bingvoiceoutput#http-headers) for list of formats
+fileformat | File format to encode the speech to | See [Bing TTS API Reference](https://docs.microsoft.com/en-us/azure/cognitive-services/speech/api-reference-rest/bingvoiceoutput#Http) for list of formats
 
 # Example
     from bingtts import Translator
