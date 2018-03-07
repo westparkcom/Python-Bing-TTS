@@ -200,7 +200,7 @@ if ttsCache:
 
 m = hashlib.md5()
 # Hash lang+Voice+text
-m.update("{}-{}-{}".format(ttsLang, ttsVoice, ttsText))
+m.update(("{}-{}-{}".format(ttsLang, ttsVoice, ttsText)).encode('utf-8'))
 # create filename base on MD5 hash
 filename = "{}.wav".format(m.hexdigest())
 if ttsCache:
