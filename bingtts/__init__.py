@@ -85,9 +85,9 @@ class Translator(object):
         
         # Set authorization header to token we just retrieved
         try:
-            headerfields["Authorization"] = "Bearer " + self.access_token
+            headerfields["Authorization"] = "Bearer {}".format(self.access_token)
         except:
-            headerfields["Authorization"] = "Bearer " + self.access_token.decode('utf-8')
+            headerfields["Authorization"] = "Bearer {}".format(self.access_token.decode('utf-8'))
         # Post to Bing API
         urlpath = "/".join([self.base_path, path])
         conn = httplib.HTTPSConnection(self.base_host)
@@ -104,69 +104,99 @@ class Translator(object):
             
         return resp.read()
         
-    def speak(self, text, lang, gender, format):
+    def speak(self, text, lang, voice, fileformat):
         """
         Gather parameters and call.
         
         :param text: Text to be sent to Bing TTS API to be
                      converted to speech
         :param lang: Language to be spoken
-        :param gender: Gender of the speaker
-        :param format: File format (see link below)
+        :param voice: Voice of the speaker
+        :param fileformat: File format (see link below)
         
         Name maps and file format specifications can be found here:
-        https://www.microsoft.com/cognitive-services/en-us/speech-api/documentation/api-reference-rest/bingvoiceoutput
+        https://docs.microsoft.com/en-us/azure/cognitive-services/speech/api-reference-rest/bingvoiceoutput
         """
         
         namemap = {
-            "ar-EG,Female" : "Microsoft Server Speech Text to Speech Voice (ar-EG, Hoda)",
-            "de-DE,Female" : "Microsoft Server Speech Text to Speech Voice (de-DE, Hedda)",
-            "de-DE,Male" : "Microsoft Server Speech Text to Speech Voice (de-DE, Stefan, Apollo)",
-            "en-AU,Female" : "Microsoft Server Speech Text to Speech Voice (en-AU, Catherine)",
-            "en-CA,Female" : "Microsoft Server Speech Text to Speech Voice (en-CA, Linda)",
-            "en-GB,Female" : "Microsoft Server Speech Text to Speech Voice (en-GB, Susan, Apollo)",
-            "en-GB,Male" : "Microsoft Server Speech Text to Speech Voice (en-GB, George, Apollo)",
-            "en-IN,Male" : "Microsoft Server Speech Text to Speech Voice (en-IN, Ravi, Apollo)",
-            "en-US,Male" : "Microsoft Server Speech Text to Speech Voice (en-US, BenjaminRUS)",
-            "en-US,Female" : "Microsoft Server Speech Text to Speech Voice (en-US, ZiraRUS)",
-            "es-ES,Female" : "Microsoft Server Speech Text to Speech Voice (es-ES, Laura, Apollo)",
-            "es-ES,Male" : "Microsoft Server Speech Text to Speech Voice (es-ES, Pablo, Apollo)",
-            "es-MX,Male" : "Microsoft Server Speech Text to Speech Voice (es-MX, Raul, Apollo)",
-            "fr-CA,Female" : "Microsoft Server Speech Text to Speech Voice (fr-CA, Caroline)",
-            "fr-FR,Female" : "Microsoft Server Speech Text to Speech Voice (fr-FR, Julie, Apollo)",
-            "fr-FR,Male" : "Microsoft Server Speech Text to Speech Voice (fr-FR, Paul, Apollo)",
-            "it-IT,Male" : "Microsoft Server Speech Text to Speech Voice (it-IT, Cosimo, Apollo)",
-            "ja-JP,Female" : "Microsoft Server Speech Text to Speech Voice (ja-JP, Ayumi, Apollo)",
-            "ja-JP,Male" : "Microsoft Server Speech Text to Speech Voice (ja-JP, Ichiro, Apollo)",
-            "pt-BR,Male" : "Microsoft Server Speech Text to Speech Voice (pt-BR, Daniel, Apollo)",
-            "ru-RU,Female" : "Microsoft Server Speech Text to Speech Voice (ru-RU, Irina, Apollo)",
-            "ru-RU,Male" : "Microsoft Server Speech Text to Speech Voice (ru-RU, Pavel, Apollo)",
-            "zh-CN,Female" : "Microsoft Server Speech Text to Speech Voice (zh-CN, HuihuiRUS)",
-            "zh-CN,Male" : "Microsoft Server Speech Text to Speech Voice (zh-CN, Kangkang, Apollo)",
-            "zh-HK,Male" : "Microsoft Server Speech Text to Speech Voice (zh-HK, Danny, Apollo)",
-            "zh-TW,Female" : "Microsoft Server Speech Text to Speech Voice (zh-TW, Yating, Apollo)",
-            "zh-TW,Male" : "Microsoft Server Speech Text to Speech Voice (zh-TW, Zhiwei, Apollo)"
+            "ar-EG" : ["Hoda"],
+            "ar-SA" : ["Naayf"],
+            "bg-BG" : ["Hoda"],
+            "ca-ES" : ["HerenaRUS"],
+            "cs-CZ" : ["Jakub"],
+            "da-DK" : ["HelleRUS"],
+            "de-AT" : ["Michael"],
+            "de-CH" : ["Karsten"],
+            "de-DE" : ["Hedda", "HeddaRUS", "Stefan, Apollo"],
+            "el-GR" : ["Stefanos"],
+            "en-AU" : ["Catherine", "HayleyRUS"],
+            "en-CA" : ["Linda", "HeatherRUS"],
+            "en-GB" : ["Susan, Apollo", "HazelRUS", "George, Apollo"],
+            "en-IE" : ["Sean"],
+            "en-IN" : ["Heera, Apollo", "PriyaRUS", "Ravi, Apollo"],
+            "en-US" : ["ZiraRUS", "JessaRUS", "BenjaminRUS"],
+            "es-ES" : ["Laura, Apollo", "HelenaRUS", "Pablo, Apollo"],
+            "es-MX" : ["HildaRUS", "Raul, Apollo"],
+            "fi-FI" : ["HeidiRUS"],
+            "fr-CA" : ["Caroline", "HarmonieRUS"],
+            "fr-CH" : ["Guillaume"],
+            "fr-FR" : ["Julie, Apollo", "HortenseRUS", "Paul, Apollo"],
+            "he-IL" : ["Asaf"],
+            "hi-IN" : ["Kalpana, Apollo", "Kalpana", "Hemant"],
+            "hr-HR" : ["Matej"],
+            "hu-HU" : ["Szabolcs"],
+            "id-ID" : ["Andika"],
+            "it-IT" : ["Cosimo, Apollo"],
+            "ja-JP" : ["Ayumi, Apollo", "Ichiro, Apollo", "HarukaRUS", "LuciaRUS", "EkaterinaRUS"],
+            "ko-KR" : ["HeamiRUS"],
+            "ms-MY" : ["Rizwan"],
+            "nb-NO" : ["HuldaRUS"],
+            "nl-NL" : ["HannaRUS"],
+            "pl-PL" : ["PaulinaRUS"],
+            "pt-BR" : ["HeloisaRUS", "Daniel, Apollo"],
+            "pt-PT" : ["HeliaRUS"],
+            "ro-RO" : ["Andrei"],
+            "ru-RU" : ["Irina, Apollo", "Pavel, Apollo"],
+            "sk-SK" : ["Filip"],
+            "sl-SI" : ["Lado"],
+            "sv-SE" : ["HedvigRUS"],
+            "ta-IN" : ["Valluvar"],
+            "th-TH" : ["Pattara"],
+            "tr-TR" : ["SedaRUS"],
+            "vi-VN" : ["An"],
+            "zh-CN" : ["HuihuiRUS", "Yaoyao, Apollo", "Kangkang, Apollo"],
+            "zh-HK" : ["Tracy, Apollo", "TracyRUS", "Danny, Apollo"],
+            "zh-TW" : ["Yating, Apollo", "HanHanRUS", "Zhiwei, Apollo"]
             }
-        if not gender:
-            gender = 'Female'
-        if not lang:
+        if not text:
+            raise LanguageException("Text to convert is not defined!")
+        if not voice and not lang:
+            # Default to English voice if nothing is defined
+            voice = 'ZiraRUS'
             lang = 'en-US'
-        if not format:
+        if voice and not lang:
+            raise LanguageException("Voice defined witout defining language!")
+        if lang not in namemap:
+            raise LanguageException("Requested language {} not available!".format(lang))
+        if lang and not voice:
+            # Default to first voice in array
+            voice = namemap[lang][0]
+        if voice not in namemap[lang]:
+            raise LanguageException("Requested language {} does not have voice {}!".format(lang, voice))
+        if not fileformat:
             format = 'riff-8khz-8bit-mono-mulaw'
-        try:
-            servicename = namemap[lang + ',' + gender]
-        except (Exception):
-            raise LanguageException("Invalid language/gender combination: %s, %s" % (lang, gender))
+        # Set the service name sent to Bing TTS
+        servicename = "Microsoft Server Speech Text to Speech Voice ({}, {})".format(lang, voice)
             
         headers = {
             "Content-type" : "application/ssml+xml",
-            "X-Microsoft-OutputFormat" : format,
+            "X-Microsoft-OutputFormat" : fileformat,
             "X-Search-AppId" : "07D3234E49CE426DAA29772419F436CA", 
             "X-Search-ClientID" : "1ECFAE91408841A480F00935DC390960", 
             "User-Agent" : "TTSForPython"
             }
             
-        body = "<speak version='1.0' xml:lang='%s'><voice xml:lang='%s' xml:gender='%s' name='%s'>%s</voice></speak>" % (lang, lang, gender, servicename, text)
+        body = "<speak version='1.0' xml:lang='{}'><voice xml:lang='{}' xml:gender='{}' name='{}'>{}</voice></speak>".format(lang, lang, voice, servicename, text)
         
         return self.call(headers, "synthesize", body)
         
