@@ -84,10 +84,7 @@ class Translator(object):
             self.access_token = self.get_access_token()
         
         # Set authorization header to token we just retrieved
-        try:
-            headerfields["Authorization"] = "Bearer {}".format(self.access_token)
-        except:
-            headerfields["Authorization"] = "Bearer {}".format(self.access_token.decode('utf-8'))
+        headerfields["Authorization"] = "Bearer {}".format(self.access_token.decode('utf-8'))
         # Post to Bing API
         urlpath = "/".join([self.base_path, path])
         conn = httplib.HTTPSConnection(self.base_host)
