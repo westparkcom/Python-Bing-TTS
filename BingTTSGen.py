@@ -218,7 +218,7 @@ if ttsCache:
 from bingtts import Translator
 translator = Translator(ttsApiKey)
 try:
-    data = translator.speak(ttsText.encode('utf-8'), ttsLang, ttsVoice, ttsFormat)
+    data = translator.speak(ttsText.encode('utf-8').decode('latin-1'), ttsLang, ttsVoice, ttsFormat)
 except (Exception) as e:
     print ("Error retrieving speech file: {}".format(e))
     sys.exit(1)
