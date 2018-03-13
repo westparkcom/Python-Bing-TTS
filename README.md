@@ -22,5 +22,5 @@ fileformat | File format to encode the speech to | See [Bing TTS API Reference](
     from bingtts import Translator
     translator = Translator('YOUR-API-KEY-HERE')
     output = translator.speak("This is a text to speech translation", "en-US", "JessaRUS", "riff-16khz-16bit-mono-pcm")
-    with open("file.wav", "w") as f:
+    with open("file.wav", "wb") as f:
         f.write(output)

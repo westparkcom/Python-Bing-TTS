@@ -10,6 +10,6 @@
     Example commands can be found at:
     http://wiki.freeswitch.org/wiki/Mod_tts_commandline#Example_commands
 	-->
-	<param name="command" value="/usr/bin/python /usr/local/bin/bingtts.py --cache=/usr/share/freeswitch/sounds/temp/8000 --dest=${file} --lang=${voice} --fileformat=riff-8khz-8bit-mono-mulaw --apikey=YOURAPIKEY --text=${text}"/>
+	<param name="command" value="/usr/bin/python /usr/local/bin/bingtts.py --cache=/usr/share/freeswitch/sounds/temp/8000 --dest=${file} --lang=en-US --voice=${voice} --fileformat=riff-8khz-8bit-mono-mulaw --apikey=YOURAPIKEY --text=${text}"/>
     </settings>
 </configuration>
