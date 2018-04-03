@@ -254,7 +254,7 @@ class Translator(object):
                     )
                 )
         if not fileformat:
-            format = 'riff-8khz-8bit-mono-mulaw'
+            fileformat = 'riff-8khz-8bit-mono-mulaw'
         # Set the service name sent to Bing TTS
         servicename = "Microsoft Server Speech Text to Speech Voice ({}, {})".format(
             lang,
