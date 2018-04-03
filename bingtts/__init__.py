@@ -22,18 +22,41 @@ except ImportError:
 
 class BadRequestException(Exception):
     def __init__(self, message):
-        self.message = str(message.status) + " " + str(message.reason)
-        super(BadRequestException, self).__init__(self.message)
+        self.message = "{} {}".format(
+            message.status,
+            message.reason
+            )
+        super(
+            BadRequestException,
+            self
+            ).__init__(
+                self.message
+                )
         
 class AuthException(Exception):
     def __init__(self, message):
-        self.message = str(message.status) + " " + str(message.reason)
-        super(AuthException, self).__init__(self.message)
+        self.message = "{} {}".format(
+            message.status,
+            message.reason
+            )
+        super(
+            AuthException,
+            self
+            ).__init__(
+                self.message
+                )
         
 class LanguageException(Exception):
     def __init__(self, message):
-        self.message = str(message)
-        super(LanguageException, self).__init__(self.message)
+        self.message = "{}".format(
+            message
+            )
+        super(
+            LanguageException,
+            self
+            ).__init__(
+                self.message
+                )
 
 
 class Translator(object):
@@ -51,10 +74,14 @@ class Translator(object):
         """
         self.client_secret = client_secret
         self.debug = debug
-        self.logger = logging.getLogger("bingtts")
+        self.logger = logging.getLogger(
+            "bingtts"
+            )
         self.access_token = None
         if self.debug:
-            self.logger.setLevel(level=logging.DEBUG)
+            self.logger.setLevel(
+                level=logging.DEBUG
+                )
         
     def get_access_token(self):
         """
@@ -62,12 +89,23 @@ class Translator(object):
         
         :return: Text of the access token to be used with requests
         """
-        headers={'Ocp-Apim-Subscription-Key' : self.client_secret}
-        conn = httplib.HTTPSConnection(self.auth_host)
-        conn.request(method="POST", url=self.auth_path, headers=headers, body="")
+        headers={
+            'Ocp-Apim-Subscription-Key' : self.client_secret
+            }
+        conn = httplib.HTTPSConnection(
+            self.auth_host
+            )
+        conn.request(
+            method="POST",
+            url=self.auth_path,
+            headers=headers,
+            body=""
+            )
         response = conn.getresponse()    
         if int(response.status) != 200:
-            raise AuthException(response)
+            raise AuthException(
+                response
+                )
         return response.read()
         
     def call(self, headerfields, path, body):
@@ -84,20 +122,42 @@ class Translator(object):
             self.access_token = self.get_access_token()
         
         # Set authorization header to token we just retrieved
-        headerfields["Authorization"] = "Bearer {}".format(self.access_token.decode('utf-8'))
+        headerfields["Authorization"] = "Bearer {}".format(
+            self.access_token.decode(
+                'utf-8'
+                )
+            )
         # Post to Bing API
-        urlpath = "/".join([self.base_path, path])
-        conn = httplib.HTTPSConnection(self.base_host)
-        conn.request(method="POST", url=urlpath, headers=headerfields, body=body)
+        urlpath = "/".join(
+            [
+                self.base_path,
+                path
+            ]
+            )
+        conn = httplib.HTTPSConnection(
+            self.base_host
+            )
+        conn.request(
+            method="POST",
+            url=urlpath,
+            headers=headerfields,
+            body=body
+            )
         resp = conn.getresponse()
         # If token was expired, get a new one and try again
         if int(resp.status) == 401:
             self.access_token = None
-            return self.call(headerfields, path, body)
+            return self.call(
+                headerfields,
+                path,
+                body
+                )
         
         # Bad data or problem, raise exception    
         if int(resp.status) != 200:
-            raise BadRequestException(resp)
+            raise BadRequestException(
+                resp
+                )
             
         return resp.read()
         
@@ -166,24 +226,40 @@ class Translator(object):
             "zh-TW" : ["Yating, Apollo", "HanHanRUS", "Zhiwei, Apollo"]
             }
         if not text:
-            raise LanguageException("Text to convert is not defined!")
+            raise LanguageException(
+                "Text to convert is not defined!"
+                )
         if not voice and not lang:
             # Default to English voice if nothing is defined
             voice = 'ZiraRUS'
             lang = 'en-US'
         if voice and not lang:
-            raise LanguageException("Voice defined witout defining language!")
+            raise LanguageException(
+                "Voice defined witout defining language!"
+                )
         if lang not in namemap:
-            raise LanguageException("Requested language {} not available!".format(lang))
+            raise LanguageException(
+                "Requested language {} not available!".format(
+                    lang
+                    )
+                )
         if lang and not voice:
             # Default to first voice in array
             voice = namemap[lang][0]
         if voice not in namemap[lang]:
-            raise LanguageException("Requested language {} does not have voice {}!".format(lang, voice))
+            raise LanguageException(
+                "Requested language {} does not have voice {}!".format(
+                    lang,
+                    voice
+                    )
+                )
         if not fileformat:
             format = 'riff-8khz-8bit-mono-mulaw'
         # Set the service name sent to Bing TTS
-        servicename = "Microsoft Server Speech Text to Speech Voice ({}, {})".format(lang, voice)
+        servicename = "Microsoft Server Speech Text to Speech Voice ({}, {})".format(
+            lang,
+            voice
+            )
             
         headers = {
             "Content-type" : "application/ssml+xml",
@@ -193,7 +269,12 @@ class Translator(object):
             "User-Agent" : "TTSForPython"
             }
             
-        body = "<speak version='1.0' xml:lang='{}'><voice xml:lang='{}' xml:gender='{}' name='{}'>{}</voice></speak>".format(lang, lang, voice, servicename, text)
+        body = "<speak version='1.0' xml:lang='{}'><voice xml:lang='{}' xml:gender='{}' name='{}'>{}</voice></speak>".format(
+            lang,
+            lang,
+            voice,
+            servicename,
+            text
+            )
         
         return self.call(headers, "synthesize", body)
-        

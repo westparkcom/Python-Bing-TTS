@@ -75,13 +75,19 @@ for item in sys.argv:
         pass
     else:
         i = i + 1
-        paramname, paramval = item.partition("=")[::2]
+        paramname, paramval = item.partition(
+            "="
+            )[::2]
         argsDict[paramname] = paramval
 
 try:
     helpReq = argsDict['--help']
     print ("")
-    print ("Usage: {} --cache=/path/to/cache --dest=/path/to/destination --lang=en-US --voice=\"ZiraUS\" --fileformat=riff-8khz-8bit-mono-mulaw --apikey=YOUR-API-KEY --text=\"Hello World\"".format(sys.argv[0]))
+    print (
+        "Usage: {} --cache=/path/to/cache --dest=/path/to/destination --lang=en-US --voice=\"ZiraUS\" --fileformat=riff-8khz-8bit-mono-mulaw --apikey=YOUR-API-KEY --text=\"Hello World\"".format(
+            sys.argv[0]
+            )
+        )
     print ("")
     print ("--cache         : Location of file cache. Useful if you repeatedly request")
     print ("                      the same text to speech and wish to conserve bandwidth")
@@ -96,7 +102,12 @@ try:
     print ("Available language combinations (--lang --voice):")
     for item, value in namemap.items():
         for voiceval in value:
-            print ("Language: {}   Voice: {}".format(item,voiceval))
+            print (
+                "Language: {}   Voice: {}".format(
+                    item,
+                    voiceval
+                    )
+                )
     print ("")
     print ("Available file formats:")
     for item, value in formatmap.items():
@@ -113,7 +124,11 @@ except:
     print ("")
     print ("Error: destination location not specified.")
     print ("")
-    print ("Usage: {} --cache=/path/to/cache --dest=/path/to/destination --lang=en-US --voice=\"ZiraUS\" --fileformat=riff-8khz-8bit-mono-mulaw --apikey=YOUR-API-KEY --text=\"Hello World\"".format(sys.argv[0]))
+    print (
+        "Usage: {} --cache=/path/to/cache --dest=/path/to/destination --lang=en-US --voice=\"ZiraUS\" --fileformat=riff-8khz-8bit-mono-mulaw --apikey=YOUR-API-KEY --text=\"Hello World\"".format(
+            sys.argv[0]
+            )
+        )
     print ("")
     sys.exit(1)
 
@@ -123,7 +138,11 @@ except:
     print ("")
     print ("Error: language not specified.")
     print ("")
-    print ("Usage: {} --cache=/path/to/cache --dest=/path/to/destination --lang=en-US --voice=\"ZiraUS\" --fileformat=riff-8khz-8bit-mono-mulaw --apikey=YOUR-API-KEY --text=\"Hello World\"".format(sys.argv[0]))
+    print (
+        "Usage: {} --cache=/path/to/cache --dest=/path/to/destination --lang=en-US --voice=\"ZiraUS\" --fileformat=riff-8khz-8bit-mono-mulaw --apikey=YOUR-API-KEY --text=\"Hello World\"".format(
+            sys.argv[0]
+            )
+        )
     print ("")
     sys.exit(1)
     
@@ -133,7 +152,11 @@ except:
     print ("")
     print ("Error: voice not specified.")
     print ("")
-    print ("Usage: {} --cache=/path/to/cache --dest=/path/to/destination --lang=en-US --voice=\"ZiraUS\" --fileformat=riff-8khz-8bit-mono-mulaw --apikey=YOUR-API-KEY --text=\"Hello World\"".format(sys.argv[0]))
+    print (
+        "Usage: {} --cache=/path/to/cache --dest=/path/to/destination --lang=en-US --voice=\"ZiraUS\" --fileformat=riff-8khz-8bit-mono-mulaw --apikey=YOUR-API-KEY --text=\"Hello World\"".format(
+            sys.argv[0]
+            )
+        )
     print ("")
     sys.exit(1)
 
@@ -143,7 +166,11 @@ except:
     print ("")
     print ("Error: file format not specified.")
     print ("")
-    print ("Usage: {} --cache=/path/to/cache --dest=/path/to/destination --lang=en-US --voice=\"ZiraUS\" --fileformat=riff-8khz-8bit-mono-mulaw --apikey=YOUR-API-KEY --text=\"Hello World\"".format(sys.argv[0]))
+    print (
+        "Usage: {} --cache=/path/to/cache --dest=/path/to/destination --lang=en-US --voice=\"ZiraUS\" --fileformat=riff-8khz-8bit-mono-mulaw --apikey=YOUR-API-KEY --text=\"Hello World\"".format(
+            sys.argv[0]
+            )
+        )
     print ("")
     sys.exit(1)
     
@@ -153,7 +180,11 @@ except:
     print ("")
     print ("Error: text not specified.")
     print ("")
-    print ("Usage: {} --cache=/path/to/cache --dest=/path/to/destination --lang=en-US --voice=\"ZiraUS\" --fileformat=riff-8khz-8bit-mono-mulaw --apikey=YOUR-API-KEY --text=\"Hello World\"".format(sys.argv[0]))
+    print (
+        "Usage: {} --cache=/path/to/cache --dest=/path/to/destination --lang=en-US --voice=\"ZiraUS\" --fileformat=riff-8khz-8bit-mono-mulaw --apikey=YOUR-API-KEY --text=\"Hello World\"".format(
+            sys.argv[0]
+            )
+        )
     print ("")
     sys.exit(1)
 
@@ -163,7 +194,11 @@ except:
     print ("")
     print ("Error: API key not specified.")
     print ("")
-    print ("Usage: {} --cache=/path/to/cache --dest=/path/to/destination --lang=en-US --voice=\"ZiraUS\" --fileformat=riff-8khz-8bit-mono-mulaw --apikey=YOUR-API-KEY --text=\"Hello World\"".format(sys.argv[0]))
+    print (
+        "Usage: {} --cache=/path/to/cache --dest=/path/to/destination --lang=en-US --voice=\"ZiraUS\" --fileformat=riff-8khz-8bit-mono-mulaw --apikey=YOUR-API-KEY --text=\"Hello World\"".format(
+            sys.argv[0]
+            )
+        )
     print ("")
     sys.exit(1)    
 
@@ -178,8 +213,16 @@ if ttsVoice not in namemap[ttsLang]:
     print ("")
     for item, value in namemap.items():
         for voiceval in value:
-            print ("Language: {}".format(item))
-            print ("Language: {}   Voice: {}".format(item, voiceval))
+            print (
+                "Language: {}".format(
+                    item
+                    )
+                )
+            print (
+                "Language: {}   Voice: {}".format(
+                    item, voiceval
+                    )
+                )
     sys.exit(1)
     
 try:
@@ -200,17 +243,39 @@ if ttsCache:
 
 m = hashlib.md5()
 # Hash lang+Voice+text
-m.update(("{}-{}-{}".format(ttsLang, ttsVoice, ttsText)).encode('utf-8'))
+m.update(
+    (
+        "{}-{}-{}".format(
+            ttsLang,
+            ttsVoice,
+            ttsText
+            )
+        ).encode(
+            'utf-8'
+            )
+        )
 # create filename base on MD5 hash
-filename = "{}.wav".format(m.hexdigest())
+filename = "{}.wav".format(
+    m.hexdigest()
+    )
 if ttsCache:
     # If our file already exists, just return it so we don't have to do an API call...
     if os.path.isfile(os.path.join(ttsCache, filename)):
         try:
-            shutil.copy2(os.path.join(ttsCache, filename), destLoc)
+            shutil.copy2(
+                os.path.join(
+                    ttsCache,
+                    filename
+                    ),
+                destLoc
+                )
             sys.exit(0)
         except (Exception) as e:
-            print ("Could not copy cached file: {}".format(e))
+            print (
+                "Could not copy cached file: {}".format(
+                    e
+                    )
+                )
             print ("Exiting...")
             sys.exit(1)
 
@@ -218,9 +283,22 @@ if ttsCache:
 from bingtts import Translator
 translator = Translator(ttsApiKey)
 try:
-    data = translator.speak(ttsText.encode('utf-8').decode('latin-1'), ttsLang, ttsVoice, ttsFormat)
+    data = translator.speak(
+        ttsText.encode(
+            'utf-8'
+            ).decode(
+                'latin-1'
+                ),
+            ttsLang,
+            ttsVoice,
+            ttsFormat
+            )
 except (Exception) as e:
-    print ("Error retrieving speech file: {}".format(e))
+    print (
+        "Error retrieving speech file: {}".format(
+            e
+            )
+        )
     sys.exit(1)
 
 if ttsCache:
@@ -228,21 +306,39 @@ if ttsCache:
         with open(destLoc, 'wb') as f:
             f.write(data)
     except (Exception) as e:
-        print ("Couldn't write to file {}: {}".format(destLoc, e))
+        print (
+            "Couldn't write to file {}: {}".format(
+                destLoc,
+                e
+                )
+            )
         sys.exit(1)
     try:
         with open(os.path.join(ttsCache, filename), 'w') as f:
             f.write(data)
     except (Exception) as e:
-        cacheFileLoc = os.path.join(ttsCache, filename)
-        print ("Couldn't write to file {}: {}".format(cacheFileLoc, e))
+        cacheFileLoc = os.path.join(
+            ttsCache,
+            filename
+            )
+        print (
+            "Couldn't write to file {}: {}".format(
+                cacheFileLoc,
+                e
+                )
+            )
         sys.exit(1)
 else:
     try:
         with open(destLoc, 'wb') as f:
             f.write(data)
     except (Exception) as e:
-        print ("Couldn't write to file {}: {}".format(destLoc, e))
+        print (
+            "Couldn't write to file {}: {}".format(
+                destLoc,
+                e
+                )
+            )
         sys.exit(1)
         
 sys.exit(0)
