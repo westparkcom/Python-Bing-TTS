@@ -141,7 +141,7 @@ class Translator(object):
             method="POST",
             url=urlpath,
             headers=headerfields,
-            body=body
+            body=body.encode('utf-8')
             )
         resp = conn.getresponse()
         # If token was expired, get a new one and try again

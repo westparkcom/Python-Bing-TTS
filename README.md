@@ -6,6 +6,9 @@ To install using pip, run the following command:
 
     pip install git+https://github.com/westparkcom/Python-Bing-TTS.git
 
+To install using pipenv, run the following command:
+
+    pipenv install git+https://github.com/westparkcom/Python-Bing-TTS.git#egg=bingtts
 # Usage
 The following is the usage of the library
 
