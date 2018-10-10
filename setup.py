@@ -5,7 +5,7 @@ setup(
     packages=['bingtts'],
     install_requires=[
     ],
-    version='0.1.5',
+    version='0.1.6',
     description='Python library to access Microsoft Bing Text to Speech API',
     author='jpattWPC',
     author_email='jpatten@westparkcom.net',
