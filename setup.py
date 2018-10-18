@@ -1,9 +1,13 @@
-from distutils.core import setup
+try:
+    from setuptools import setup
+except ImportError:
+    from distutils.core import setup
 
 setup(
     name='bingtts',
     packages=['bingtts'],
     install_requires=[
+        'six'
     ],
     version='0.1.6',
     description='Python library to access Microsoft Bing Text to Speech API',

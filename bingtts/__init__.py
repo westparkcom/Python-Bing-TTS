@@ -8,16 +8,19 @@
 
 """
 
+import six
+
 try:
     import simplejson as json
 except ImportError:
     import json
+
 import logging
 
-try:
-    import httplib
-except ImportError:
-    import http.client as httplib
+if six.PY2:
+    from urllib2 import Request, urlopen, build_opener, install_opener, ProxyHandler
+else:
+    from urllib.request import Request, urlopen, build_opener, install_opener, ProxyHandler
 
 
 class BadRequestException(Exception):
@@ -63,13 +66,14 @@ class Translator(object):
     """
     Implements API for the Microsoft Translator service
     """
-    auth_host = 'api.cognitive.microsoft.com'
+    auth_host = 'https://api.cognitive.microsoft.com'
     auth_path = '/sts/v1.0/issueToken'
-    base_host = 'speech.platform.bing.com'
+    base_host = 'https://speech.platform.bing.com'
     base_path = ''
-    def __init__(self, client_secret, debug=False):
+    def __init__(self, client_secret, proxies=None, debug=False):
         """
-        :param clien_secret: The API key provided by Azure
+        :param client_secret: The API key provided by Azure
+        :param proxies: http proxy information in format: {'http': 'http://www.example.com:3128/', 'http': 'https://www.example.com:3128/'}
         :param debug: If true, the logging level will be set to debug
         """
         self.client_secret = client_secret
@@ -82,7 +86,12 @@ class Translator(object):
             self.logger.setLevel(
                 level=logging.DEBUG
                 )
-        
+            
+        if proxies:
+            proxy_support = ProxyHandler(proxies)
+            opener = build_opener(proxy_support)
+            install_opener(opener)
+    
     def get_access_token(self):
         """
         Retrieve access token from Azure.
@@ -92,17 +101,17 @@ class Translator(object):
         headers={
             'Ocp-Apim-Subscription-Key' : self.client_secret
             }
-        conn = httplib.HTTPSConnection(
-            self.auth_host
-            )
-        conn.request(
-            method="POST",
-            url=self.auth_path,
-            headers=headers,
-            body=""
-            )
-        response = conn.getresponse()    
-        if int(response.status) != 200:
+
+        if six.PY2:
+            req = Request(url=self.auth_host + self.auth_path, headers=headers, data={})
+            response = urlopen(req)
+            status = response.getcode()
+        else:
+            req = Request(url=self.auth_host + self.auth_path, method="POST", headers=headers)
+            response = urlopen(req)
+            status = response.status
+        
+        if int(status) != 200:
             raise AuthException(
                 response
                 )
@@ -134,18 +143,18 @@ class Translator(object):
                 path
             ]
             )
-        conn = httplib.HTTPSConnection(
-            self.base_host
-            )
-        conn.request(
-            method="POST",
-            url=urlpath,
-            headers=headerfields,
-            body=body.encode('utf-8')
-            )
-        resp = conn.getresponse()
+        
+        if six.PY2:
+            req = Request(url=self.base_host + urlpath, headers=headerfields, data=body.encode('utf-8'))
+            response = urlopen(req)
+            status = response.getcode()
+        else:
+            req = Request(url=self.base_host + urlpath, method="POST", headers=headerfields, data=body.encode('utf-8'))
+            response = urlopen(req)  
+            status = response.status
+        
         # If token was expired, get a new one and try again
-        if int(resp.status) == 401:
+        if int(status) == 401:
             self.access_token = None
             return self.call(
                 headerfields,
@@ -154,12 +163,12 @@ class Translator(object):
                 )
         
         # Bad data or problem, raise exception    
-        if int(resp.status) != 200:
+        if int(status) != 200:
             raise BadRequestException(
-                resp
+                response
                 )
             
-        return resp.read()
+        return response.read()
         
     def speak(self, text, lang, voice, fileformat):
         """
